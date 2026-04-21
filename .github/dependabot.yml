@@ -1,0 +1,49 @@
+version: 2
+updates:
+  # npm — root workspace
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
+
+  # npm — Next.js app
+  - package-ecosystem: npm
+    directory: "/app"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
+
+  # npm — @preflight/x402 SDK
+  - package-ecosystem: npm
+    directory: "/packages/x402-preflight"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
+
+  # npm — @preflight/verify
+  - package-ecosystem: npm
+    directory: "/packages/x402-preflight-verify"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
+
+  # npm — @preflight/mcp
+  - package-ecosystem: npm
+    directory: "/packages/x402-preflight-mcp"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    target-branch: main
+    open-pull-requests-limit: 5
