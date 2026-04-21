@@ -30,9 +30,13 @@ npx @larkinsh/verify receipt.json
 # ✓ Valid. wallet=0x... score=72 decision=allow issued=2026-04-21T...
 ```
 
+## Why this exists
+
+You do not need to trust Larkin. You do not need to call our API. Every signed receipt we've ever issued is verifiable forever using only this library and our published public key.
+
 ## Status
 
-Stubbed in CP1. Full implementation lands in CP2. See `BRIEF.md`.
+Implemented in CP2. Test coverage: valid / tampered / wrong-key / unknown-kid / mock-sentinel / expired. See `BRIEF.md`.
 
 ## License
 
