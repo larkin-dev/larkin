@@ -1,5 +1,5 @@
 {
-  "name": "@larkin/verify",
+  "name": "@larkinsh/verify",
   "version": "0.0.1",
   "description": "Verify Larkin Ed25519-signed receipts. Zero dependency on Larkin's API.",
   "license": "MIT",

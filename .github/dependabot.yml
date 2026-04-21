@@ -16,7 +16,7 @@ updates:
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @larkin/x402 SDK
+  # npm — @larkinsh/x402 SDK
   - package-ecosystem: npm
     directory: "/packages/x402-larkin"
     schedule:
@@ -24,7 +24,7 @@ updates:
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @larkin/verify
+  # npm — @larkinsh/verify
   - package-ecosystem: npm
     directory: "/packages/x402-larkin-verify"
     schedule:
@@ -32,7 +32,7 @@ updates:
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @larkin/mcp
+  # npm — @larkinsh/mcp
   - package-ecosystem: npm
     directory: "/packages/x402-larkin-mcp"
     schedule:

@@ -1,5 +1,5 @@
 {
-  "name": "@larkin/mcp",
+  "name": "@larkinsh/mcp",
   "version": "0.0.1",
   "description": "MCP server for Larkin wallet authorization checks.",
   "license": "MIT",

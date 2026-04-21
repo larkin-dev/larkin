@@ -1,9 +1,9 @@
-# @larkin/x402
+# @larkinsh/x402
 
 > Authorization middleware for x402-paid APIs. One line of code.
 
 ```ts
-import { preflight } from "@larkin/x402";
+import { preflight } from "@larkinsh/x402";
 
 export const GET = preflight(handler, {
   apiKey: process.env.LARKIN_KEY!,
@@ -17,7 +17,7 @@ export const GET = preflight(handler, {
 ## Install
 
 ```bash
-npm i @larkin/x402
+npm i @larkinsh/x402
 ```
 
 ## Status

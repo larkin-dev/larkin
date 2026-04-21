@@ -5,7 +5,7 @@
 Authorization middleware for the x402 agent payment protocol. One line of code. Every paying wallet scored, signed, and decided before your API responds.
 
 ```ts
-import { preflight } from "@larkin/x402";
+import { preflight } from "@larkinsh/x402";
 
 export const GET = preflight(handler, {
   minScore: 40,
@@ -17,9 +17,9 @@ export const GET = preflight(handler, {
 
 ```
 /app                         — Next.js 15 web app (landing, dashboard, API)   [proprietary]
-/packages/x402-larkin        — TypeScript SDK (@larkin/x402)                  [MIT]
-/packages/x402-larkin-verify — Receipt verifier (@larkin/verify)              [MIT]
-/packages/x402-larkin-mcp    — MCP server (@larkin/mcp)                       [MIT]
+/packages/x402-larkin        — TypeScript SDK (@larkinsh/x402)                  [MIT]
+/packages/x402-larkin-verify — Receipt verifier (@larkinsh/verify)              [MIT]
+/packages/x402-larkin-mcp    — MCP server (@larkinsh/mcp)                       [MIT]
 /packages/x402-larkin-py     — Python SDK (larkin-x402)                       [MIT]
 /scripts                     — Setup scripts                                  [proprietary]
 ```
@@ -31,7 +31,7 @@ Larkin uses an **open-core model**.
 - All packages under `/packages/*` are **MIT licensed**. Use, fork, modify, sell — no restrictions.
 - The hosted service under `/app` is **proprietary**. Not licensed for redistribution.
 
-You can verify any Larkin-issued receipt using only `@larkin/verify` and our public key — without ever calling our hosted service. That's the trust model.
+You can verify any Larkin-issued receipt using only `@larkinsh/verify` and our public key — without ever calling our hosted service. That's the trust model.
 
 ## Quick start
 

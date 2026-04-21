@@ -1,4 +1,4 @@
-# @larkin/verify
+# @larkinsh/verify
 
 > Verify any Larkin receipt anywhere, forever, with zero dependency on Larkin's API.
 
@@ -7,13 +7,13 @@ You do not need to trust Larkin. You do not need to call our servers. Every sign
 ## Install
 
 ```bash
-npm i @larkin/verify
+npm i @larkinsh/verify
 ```
 
 ## Usage
 
 ```ts
-import { verify, verifyWithFetch } from "@larkin/verify";
+import { verify, verifyWithFetch } from "@larkinsh/verify";
 
 // Pure — caller supplies the public key
 const result = verify(receipt, publicKeyBase64Url);
@@ -26,7 +26,7 @@ const result2 = await verifyWithFetch(receipt);
 ## CLI
 
 ```bash
-npx @larkin/verify receipt.json
+npx @larkinsh/verify receipt.json
 # ✓ Valid. wallet=0x... score=72 decision=allow issued=2026-04-21T...
 ```
 
