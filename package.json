@@ -1,5 +1,5 @@
 {
-  "name": "preflight",
+  "name": "larkin",
   "private": true,
   "version": "0.1.0",
   "description": "Authorization middleware for the x402 agent economy.",

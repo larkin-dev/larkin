@@ -16,25 +16,25 @@ updates:
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @preflight/x402 SDK
+  # npm — @larkin/x402 SDK
   - package-ecosystem: npm
-    directory: "/packages/x402-preflight"
+    directory: "/packages/x402-larkin"
     schedule:
       interval: weekly
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @preflight/verify
+  # npm — @larkin/verify
   - package-ecosystem: npm
-    directory: "/packages/x402-preflight-verify"
+    directory: "/packages/x402-larkin-verify"
     schedule:
       interval: weekly
     target-branch: main
     open-pull-requests-limit: 5
 
-  # npm — @preflight/mcp
+  # npm — @larkin/mcp
   - package-ecosystem: npm
-    directory: "/packages/x402-preflight-mcp"
+    directory: "/packages/x402-larkin-mcp"
     schedule:
       interval: weekly
     target-branch: main

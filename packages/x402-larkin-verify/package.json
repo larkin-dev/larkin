@@ -1,27 +1,18 @@
 {
-  "name": "@preflight/x402",
+  "name": "@larkin/verify",
   "version": "0.0.1",
-  "description": "Authorization middleware for the x402 agent payment protocol.",
+  "description": "Verify Larkin Ed25519-signed receipts. Zero dependency on Larkin's API.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "larkin-verify": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    },
-    "./next": {
-      "types": "./dist/next.d.ts",
-      "import": "./dist/next.js"
-    },
-    "./hono": {
-      "types": "./dist/hono.d.ts",
-      "import": "./dist/hono.js"
-    },
-    "./express": {
-      "types": "./dist/express.d.ts",
-      "import": "./dist/express.js"
     }
   },
   "files": [
@@ -35,16 +26,18 @@
   },
   "keywords": [
     "x402",
-    "agent",
-    "wallet",
-    "authorization",
-    "preflight"
+    "larkin",
+    "ed25519",
+    "verify",
+    "receipt"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/preflight-dev/preflight",
-    "directory": "packages/x402-preflight"
+    "url": "https://github.com/larkin-dev/larkin.git",
+    "directory": "packages/x402-larkin-verify"
   },
+  "homepage": "https://larkin.sh",
+  "bugs": "https://github.com/larkin-dev/larkin/issues",
   "publishConfig": {
     "access": "public"
   },

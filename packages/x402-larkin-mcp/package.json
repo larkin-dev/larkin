@@ -1,13 +1,13 @@
 {
-  "name": "@preflight/mcp",
+  "name": "@larkin/mcp",
   "version": "0.0.1",
-  "description": "MCP server for Preflight wallet authorization checks.",
+  "description": "MCP server for Larkin wallet authorization checks.",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "preflight-mcp": "./dist/cli.js"
+    "larkin-mcp": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -20,15 +20,17 @@
   },
   "keywords": [
     "mcp",
-    "preflight",
+    "larkin",
     "x402",
     "agent"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/preflight-dev/preflight",
-    "directory": "packages/x402-preflight-mcp"
+    "url": "https://github.com/larkin-dev/larkin.git",
+    "directory": "packages/x402-larkin-mcp"
   },
+  "homepage": "https://larkin.sh",
+  "bugs": "https://github.com/larkin-dev/larkin/issues",
   "publishConfig": {
     "access": "public"
   },

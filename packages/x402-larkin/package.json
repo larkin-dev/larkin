@@ -1,0 +1,56 @@
+{
+  "name": "@larkin/x402",
+  "version": "0.0.1",
+  "description": "Authorization middleware for the x402 agent payment protocol.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
+    "./hono": {
+      "types": "./dist/hono.d.ts",
+      "import": "./dist/hono.js"
+    },
+    "./express": {
+      "types": "./dist/express.d.ts",
+      "import": "./dist/express.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "x402",
+    "agent",
+    "wallet",
+    "authorization",
+    "larkin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larkin-dev/larkin.git",
+    "directory": "packages/x402-larkin"
+  },
+  "homepage": "https://larkin.sh",
+  "bugs": "https://github.com/larkin-dev/larkin/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
