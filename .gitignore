@@ -11,6 +11,7 @@ dist/
 *.log
 .turbo
 coverage/
+supabase/.temp/
 
 # Python
 __pycache__/
