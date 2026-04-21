@@ -1,0 +1,29 @@
+{
+  "name": "preflight",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Authorization middleware for the x402 agent economy.",
+  "workspaces": [
+    "app",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "seed:stripe": "tsx scripts/seed-stripe.ts",
+    "init:keys": "tsx scripts/init-signing-key.ts"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
