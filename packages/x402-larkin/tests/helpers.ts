@@ -80,3 +80,13 @@ export function fetchMockThrowing(): typeof fetch {
 }
 
 export const PROOF_HEADER = makeProofHeader(VITALIK);
+
+/** Payload that decodes as JSON but matches neither EIP-3009 nor Permit2. */
+export function makeUnknownShapeHeader(): string {
+  const payload = {
+    x402Version: 2,
+    accepted: { scheme: "experimental", network: "future:1" },
+    payload: { futureSchemeField: { payerDelegation: "0x..." } },
+  };
+  return Buffer.from(JSON.stringify(payload)).toString("base64");
+}

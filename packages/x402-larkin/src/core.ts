@@ -87,7 +87,23 @@ export function extractWalletFromHeader(
   const eip3009 = paymentPayload?.payload?.authorization?.from;
   const permit2 = paymentPayload?.payload?.permit2Authorization?.from;
   const candidate = eip3009 ?? permit2;
-  return candidate && EVM_ADDR.test(candidate) ? candidate : null;
+  if (candidate && EVM_ADDR.test(candidate)) return candidate;
+
+  // Decoded OK but neither EVM scheme matched. Log a visible signal so we
+  // notice when x402 adds a new scheme or a non-EVM chain sends us traffic.
+  // Response behavior is unchanged (400 missing_or_invalid_payment_proof);
+  // this is pure observability.
+  if (decoded && typeof decoded === "object") {
+    const inner = (decoded as { payload?: unknown }).payload;
+    const innerKeys =
+      inner && typeof inner === "object" ? Object.keys(inner as object) : [];
+    console.warn(
+      `[@larkinsh/x402] unrecognized payload shape. Schemes supported: ` +
+        `eip-3009, permit2. Received keys: [${innerKeys.join(", ")}]. ` +
+        `If this is a valid new x402 scheme, please file an issue.`,
+    );
+  }
+  return null;
 }
 
 export function readPaymentSignatureHeader(

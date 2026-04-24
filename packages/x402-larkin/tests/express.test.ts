@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import express from "express";
 import type { AddressInfo } from "node:net";
 import type { Server } from "node:http";
@@ -8,6 +8,7 @@ import {
   makeCheckOk,
   fetchMockReturning,
   fetchMockThrowing,
+  makeUnknownShapeHeader,
 } from "./helpers.js";
 
 const OK_HANDLER: express.RequestHandler = (_req, res) => {
@@ -124,6 +125,24 @@ describe("Express adapter", () => {
     expect(((await res.json()) as { error: string }).error).toBe(
       "trust_service_unavailable",
     );
+    await h.close();
+  });
+
+  it("warns to stderr on unrecognized payload shape (400 response unchanged)", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const h = await harness({
+      apiKey: "k",
+      mode: "block",
+      fetchImpl: fetchMockReturning(makeCheckOk({ score: 72, decision: "allow" })),
+    });
+    const res = await fetch(h.url, {
+      method: "POST",
+      headers: { "PAYMENT-SIGNATURE": makeUnknownShapeHeader() },
+    });
+    expect(res.status).toBe(400);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/unrecognized payload shape/);
+    warnSpy.mockRestore();
     await h.close();
   });
 

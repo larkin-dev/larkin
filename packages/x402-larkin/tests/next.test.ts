@@ -1,10 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { preflight } from "../src/next.js";
 import {
   PROOF_HEADER,
   makeCheckOk,
   fetchMockReturning,
   fetchMockThrowing,
+  makeUnknownShapeHeader,
 } from "./helpers.js";
 
 const OK_HANDLER = async (): Promise<Response> =>
@@ -98,6 +99,25 @@ describe("Next.js adapter", () => {
     expect(res.status).toBe(503);
     const body = (await res.json()) as { error: string };
     expect(body.error).toBe("trust_service_unavailable");
+  });
+
+  it("warns to stderr on unrecognized payload shape (400 response unchanged)", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const wrapped = preflight(OK_HANDLER, {
+      apiKey: "k",
+      mode: "block",
+      fetchImpl: fetchMockReturning(makeCheckOk({ score: 72, decision: "allow" })),
+    });
+    const req = new Request("http://localhost/paid", {
+      method: "POST",
+      headers: { "PAYMENT-SIGNATURE": makeUnknownShapeHeader() },
+    });
+    const res = await wrapped(req);
+    expect(res.status).toBe(400);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/unrecognized payload shape/);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/futureSchemeField/);
+    warnSpy.mockRestore();
   });
 
   it("fails open in warn mode when Larkin API is down", async () => {

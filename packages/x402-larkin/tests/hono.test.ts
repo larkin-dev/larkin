@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { Hono } from "hono";
 import { preflight } from "../src/hono.js";
 import {
@@ -6,6 +6,7 @@ import {
   makeCheckOk,
   fetchMockReturning,
   fetchMockThrowing,
+  makeUnknownShapeHeader,
 } from "./helpers.js";
 
 const OK_HANDLER = async (): Promise<Response> =>
@@ -107,6 +108,23 @@ describe("Hono adapter", () => {
     expect(((await res.json()) as { error: string }).error).toBe(
       "trust_service_unavailable",
     );
+  });
+
+  it("warns to stderr on unrecognized payload shape (400 response unchanged)", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const app = buildApp({
+      apiKey: "k",
+      mode: "block",
+      fetchImpl: fetchMockReturning(makeCheckOk({ score: 72, decision: "allow" })),
+    });
+    const res = await app.request("/paid", {
+      method: "POST",
+      headers: { "PAYMENT-SIGNATURE": makeUnknownShapeHeader() },
+    });
+    expect(res.status).toBe(400);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/unrecognized payload shape/);
+    warnSpy.mockRestore();
   });
 
   it("fails open in warn mode when Larkin API is down", async () => {
