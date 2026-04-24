@@ -14,7 +14,8 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "seed:stripe": "tsx --env-file=.env.local scripts/seed-stripe.ts",
-    "init:keys": "tsx --env-file=.env.local scripts/init-signing-key.ts"
+    "init:keys": "tsx --env-file=.env.local scripts/init-signing-key.ts",
+    "e2e:verify": "tsx --env-file=.env.local scripts/e2e-verify.ts"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
