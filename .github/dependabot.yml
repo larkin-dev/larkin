@@ -1,49 +1,111 @@
 version: 2
+
+# v1 dependency freeze: major bumps on pinned deps are intentionally ignored.
+# See DECISIONS.md — "Dependabot ignores major-version bumps on pinned deps
+# during v1". Dedicated upgrade sprint post-CP6.
+
 updates:
   # npm — root workspace
   - package-ecosystem: npm
     directory: "/"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@noble/ed25519"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "json-canonicalize"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@supabase/ssr"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
 
   # npm — Next.js app
   - package-ecosystem: npm
     directory: "/app"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@noble/ed25519"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "json-canonicalize"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@supabase/ssr"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
 
   # npm — @larkinsh/x402 SDK
   - package-ecosystem: npm
     directory: "/packages/x402-larkin"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@noble/ed25519"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "json-canonicalize"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
 
   # npm — @larkinsh/verify
   - package-ecosystem: npm
     directory: "/packages/x402-larkin-verify"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@noble/ed25519"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "json-canonicalize"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
 
   # npm — @larkinsh/mcp
   - package-ecosystem: npm
     directory: "/packages/x402-larkin-mcp"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   # GitHub Actions
   - package-ecosystem: github-actions
     directory: "/"
-    schedule:
-      interval: weekly
+    schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
