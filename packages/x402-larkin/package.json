@@ -1,6 +1,6 @@
 {
   "name": "@larkinsh/x402",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Authorization middleware for the x402 agent payment protocol.",
   "license": "MIT",
   "type": "module",
@@ -31,7 +31,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "keywords": [
     "x402",
@@ -50,7 +51,23 @@
   "publishConfig": {
     "access": "public"
   },
+  "peerDependencies": {
+    "express": "^4 || ^5",
+    "hono": "^4",
+    "next": "^14 || ^15"
+  },
+  "peerDependenciesMeta": {
+    "express": { "optional": true },
+    "hono": { "optional": true },
+    "next": { "optional": true }
+  },
   "devDependencies": {
-    "typescript": "^5.6.0"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "express": "^5.0.0",
+    "hono": "^4.6.0",
+    "next": "^15.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.4"
   }
 }

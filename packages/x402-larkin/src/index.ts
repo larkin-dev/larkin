@@ -1,6 +1,16 @@
-// @larkinsh/x402 — stub. Real adapters land in CP3 after x402 docs are fetched.
+// Root entry point — intentionally does NOT export preflight().
 //
-// Naming note: the product is Larkin; the middleware function is still named
-// `preflight()` because it accurately describes the operation (a preflight
-// check before the API responds). Same pattern as Stripe's `stripe.charges.create()`.
-export const LARKIN_SDK_VERSION = "0.0.1";
+// Import from the framework-specific subpath:
+//   import { preflight } from "@larkinsh/x402/next";
+//   import { preflight } from "@larkinsh/x402/hono";
+//   import { preflight } from "@larkinsh/x402/express";
+//
+// This keeps each adapter's framework types out of the others' bundles.
+
+export const LARKIN_SDK_VERSION = "0.1.0";
+
+export type {
+  PreflightOptions,
+  CheckResponse,
+  PreflightOutcome,
+} from "./core.js";
