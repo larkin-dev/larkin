@@ -28,6 +28,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Build the MIT packages under /packages so their dist/ exists before
+      # typecheck runs. Their package.json exports maps point exclusively at
+      # ./dist/*.js|.d.ts (the shape consumers see when installed from npm),
+      # so tests/x402-demo cannot resolve `@larkinsh/x402/next` without a
+      # prior build. Scoped to ./packages/* so this step does NOT trigger
+      # `next build` on app/ or tests/x402-demo/ (those need env vars and
+      # aren't the point of CI's typecheck gate).
+      - name: Build workspace packages
+        run: pnpm --filter './packages/*' build
+
       - name: Typecheck
         run: pnpm typecheck
 
