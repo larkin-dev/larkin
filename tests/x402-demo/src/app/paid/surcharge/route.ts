@@ -1,0 +1,12 @@
+import { preflight } from "@larkinsh/x402/next";
+
+const handler = async () =>
+  Response.json({ paid: true, mode: "surcharge", hello: "world" });
+
+export const POST = preflight(handler, {
+  apiKey: process.env.LARKIN_KEY ?? "demo",
+  mode: "surcharge",
+  minScore: 40,
+  surcharge: { below: 90, multiplier: 10 },
+  endpoint: process.env.LARKIN_ENDPOINT ?? "https://larkin.sh",
+});
