@@ -1,0 +1,13 @@
+{
+  "payload": {
+    "checkId": "chk_PARITY1",
+    "wallet": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "chainId": 1,
+    "score": 62,
+    "decision": "allow",
+    "issuedAt": 1800000000,
+    "expiresAt": 4000000000
+  },
+  "sig": "MOCK_UNSIGNED_RECEIPT_DO_NOT_TRUST",
+  "kid": "parity-test"
+}
