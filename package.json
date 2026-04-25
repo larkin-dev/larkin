@@ -16,7 +16,8 @@
     "seed:stripe": "tsx --env-file=.env.local scripts/seed-stripe.ts",
     "init:keys": "tsx --env-file=.env.local scripts/init-signing-key.ts",
     "e2e:verify": "tsx --env-file=.env.local scripts/e2e-verify.ts",
-    "parity:generate": "tsx scripts/generate-parity-vectors.ts"
+    "parity:generate": "tsx scripts/generate-parity-vectors.ts",
+    "migrate": "tsx --env-file=.env.local scripts/apply-migration.ts"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
