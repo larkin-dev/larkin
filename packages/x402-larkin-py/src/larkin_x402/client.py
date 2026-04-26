@@ -1,4 +1,4 @@
-"""HTTP client for Larkin's /v1/check endpoint.
+"""HTTP client for Larkin's /api/v1/check endpoint.
 
 Synchronous by default — httpx also supports async (AsyncClient), but the v1
 SDK surface is sync for simplicity. Callers who want async can wrap:
@@ -36,7 +36,7 @@ class Larkin:
         min_score: int | None = None,
         require_erc8004: bool = False,
     ) -> dict[str, Any]:
-        """Call POST /v1/check.
+        """Call POST /api/v1/check.
 
         Returns the full decoded JSON response — {"ok": True, "data": {...}, "meta": {...}}
         or {"ok": False, "error": {...}}. Raises on network/HTTP errors.
@@ -48,9 +48,9 @@ class Larkin:
             body["requireERC8004"] = True
 
         response = self._client.post(
-            f"{self._endpoint}/v1/check",
+            f"{self._endpoint}/api/v1/check",
             json=body,
-            headers={"x-api-key": self._api_key},
+            headers={"X-API-Key": self._api_key},
         )
         response.raise_for_status()
         return response.json()

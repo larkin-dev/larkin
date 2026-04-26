@@ -1,2 +1,7 @@
-// @larkinsh/mcp — stub. Full MCP server lands in CP6.
-export const LARKIN_MCP_VERSION = "0.0.1";
+export { createServer } from "./server.js";
+export type { ServerOptions } from "./server.js";
+export {
+  checkWallet,
+  type CheckWalletInput,
+  type CheckWalletOptions,
+} from "./tools/check-wallet.js";

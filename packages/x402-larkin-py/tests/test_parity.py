@@ -15,7 +15,7 @@ import pathlib
 
 import pytest
 
-from larkinsh_x402 import verify
+from larkin_x402 import verify
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 
