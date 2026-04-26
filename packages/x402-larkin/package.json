@@ -1,6 +1,6 @@
 {
   "name": "@larkinsh/x402",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Authorization middleware for the x402 agent payment protocol.",
   "license": "MIT",
   "type": "module",
