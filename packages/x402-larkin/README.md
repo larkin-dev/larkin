@@ -70,7 +70,7 @@ Every Larkin-issued receipt is independently verifiable forever using only the p
 
 ## Documentation
 
-Full docs: <https://docs.larkin.sh>
+Full docs: <https://larkin.sh/docs>
 Marketing site: <https://larkin.sh>
 Issues: <https://github.com/larkin-dev/larkin-public-tmp/issues>
 

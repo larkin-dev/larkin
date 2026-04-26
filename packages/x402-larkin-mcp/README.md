@@ -63,6 +63,11 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 ```
 
+## Documentation
+
+Full docs: <https://larkin.sh/docs>
+Source & issues: <https://github.com/larkin-dev/larkin-public-tmp>
+
 ## License
 
 MIT
