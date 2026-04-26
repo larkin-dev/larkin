@@ -29,28 +29,18 @@ updates:
       - dependency-name: "vitest"
         update-types: ["version-update:semver-major"]
 
-  # npm — Next.js app
+  # npm — tests/x402-demo (SDK consumer demo)
   - package-ecosystem: npm
-    directory: "/app"
+    directory: "/tests/x402-demo"
     schedule: { interval: weekly }
     target-branch: main
     open-pull-requests-limit: 5
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "@noble/ed25519"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "json-canonicalize"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "next"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint-config-next"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@supabase/ssr"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vitest"
         update-types: ["version-update:semver-major"]
 
   # npm — @larkinsh/x402 SDK
