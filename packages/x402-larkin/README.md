@@ -2,6 +2,11 @@
 
 > Authorization middleware for x402-paid APIs. One line of code wraps your handler; every paying wallet gets a 0-100 trust score and an Ed25519-signed receipt before your business logic runs.
 
+## Requirements
+
+Node 18+ with ESM. This package is ESM-only — use `import` syntax, not `require()`.
+CJS callers can use dynamic import: `const m = await import("@larkinsh/x402/next")`.
+
 ## Install
 
 ```bash
