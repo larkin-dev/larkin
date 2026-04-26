@@ -66,7 +66,7 @@ await server.connect(transport);
 ## Documentation
 
 Full docs: <https://larkin.sh/docs>
-Source & issues: <https://github.com/larkin-dev/larkin-public-tmp>
+Source & issues: <https://github.com/larkin-dev/larkin>
 
 ## License
 
