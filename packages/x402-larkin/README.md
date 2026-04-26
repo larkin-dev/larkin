@@ -60,6 +60,10 @@ app.get("/paid/data", (_req, res) => res.json({ ok: true }));
 | `surcharge` | `{ below: number, multiplier: number }` | only when `mode === "surcharge"` | Multiplier applied to the x402 price for sub-threshold wallets. |
 | `requireERC8004` | boolean | no | If true, deny wallets without an ERC-8004 registration regardless of score. |
 
+## A note on naming
+
+This package is `@larkinsh/x402` — `larkinsh` is the npm scope (because `larkin` was taken at publish time), `x402` because it adds authorization to x402-paid endpoints. The product is **Larkin**; the verb is `preflight()`. You'll see all three in the docs.
+
 ## Why "preflight"?
 
 The product is **Larkin**; the function is named `preflight()` because it describes the operation — a preflight check before the API responds. Stripe uses the same pattern (`stripe.charges.create()`).

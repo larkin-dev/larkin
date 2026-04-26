@@ -1,6 +1,6 @@
 {
   "name": "@larkinsh/x402",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Authorization middleware for the x402 agent payment protocol.",
   "license": "MIT",
   "type": "module",
@@ -43,11 +43,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/larkin-dev/larkin-public-tmp.git",
+    "url": "https://github.com/larkin-dev/larkin.git",
     "directory": "packages/x402-larkin"
   },
   "homepage": "https://larkin.sh",
-  "bugs": "https://github.com/larkin-dev/larkin-public-tmp/issues",
+  "bugs": "https://github.com/larkin-dev/larkin/issues",
   "publishConfig": {
     "access": "public"
   },

@@ -5,7 +5,7 @@ import { checkWallet, type CheckWalletOptions } from "./tools/check-wallet.js";
 export type ServerOptions = CheckWalletOptions;
 
 export function createServer(opts: ServerOptions): McpServer {
-  const server = new McpServer({ name: "@larkinsh/mcp", version: "1.0.0" });
+  const server = new McpServer({ name: "@larkinsh/mcp", version: "1.0.1" });
 
   server.registerTool(
     "check_wallet",
