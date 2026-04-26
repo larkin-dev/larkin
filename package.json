@@ -4,20 +4,14 @@
   "version": "0.1.0",
   "description": "Authorization middleware for the x402 agent economy.",
   "workspaces": [
-    "app",
-    "packages/*"
+    "packages/*",
+    "tests/x402-demo"
   ],
   "scripts": {
-    "dev": "pnpm --filter app dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck",
-    "seed:stripe": "tsx --env-file=.env.local scripts/seed-stripe.ts",
-    "init:keys": "tsx --env-file=.env.local scripts/init-signing-key.ts",
-    "e2e:verify": "tsx --env-file=.env.local scripts/e2e-verify.ts",
-    "parity:generate": "tsx scripts/generate-parity-vectors.ts",
-    "migrate": "tsx --env-file=.env.local scripts/apply-migration.ts"
+    "typecheck": "pnpm -r typecheck"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
@@ -27,7 +21,6 @@
   "devDependencies": {
     "@noble/ed25519": "^2.1.0",
     "@types/node": "^22.0.0",
-    "tsx": "^4.19.0",
     "typescript": "^5.6.0"
   }
 }

@@ -35,11 +35,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/larkin-dev/larkin.git",
+    "url": "https://github.com/larkin-dev/larkin-public-tmp.git",
     "directory": "packages/x402-larkin-verify"
   },
   "homepage": "https://larkin.sh",
-  "bugs": "https://github.com/larkin-dev/larkin/issues",
+  "bugs": "https://github.com/larkin-dev/larkin-public-tmp/issues",
   "publishConfig": {
     "access": "public"
   },

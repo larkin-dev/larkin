@@ -19,9 +19,3 @@ Routes (all POST, all require a `PAYMENT-SIGNATURE` header):
 
 To see the block mode allow path: edit `block/route.ts` and lower `minScore` to
 40. Vitalik's score (~62) then passes.
-
-## Test with curl
-
-See `scripts/demo-curl.sh` at the repo root for a canned invocation. The
-PAYMENT-SIGNATURE is a base64 PaymentPayload carrying vitalik's address as
-the EIP-3009 `authorization.from`.
