@@ -11,7 +11,7 @@ npm i @larkinsh/x402
 ```
 
 ```ts
-import { preflight } from "@larkinsh/x402";
+import { preflight } from "@larkinsh/x402/next";
 
 export const GET = preflight(handler, {
   apiKey: process.env.LARKIN_API_KEY!,
@@ -20,7 +20,7 @@ export const GET = preflight(handler, {
 });
 ```
 
-Adapters for Next.js (`@larkinsh/x402/next`), Hono (`@larkinsh/x402/hono`), and Express (`@larkinsh/x402/express`).
+Hono and Express adapters: `@larkinsh/x402/hono` and `@larkinsh/x402/express`.
 
 ## Receipt verifier
 
@@ -35,7 +35,7 @@ const result = verify(receipt, publicKeyBase64Url);
 // → { valid: true, payload: {...} } | { valid: false, reason: "..." }
 ```
 
-Verify any receipt Larkin has ever issued using only this library and our published public key — no call to our infrastructure required, ever, even after we're gone.
+Verify any receipt Larkin has ever issued using only this library and our published public key — no call to our infrastructure required. Receipts remain independently verifiable forever.
 
 CLI:
 
@@ -57,6 +57,10 @@ packages/x402-larkin-mcp     — MCP server (@larkinsh/mcp)
 packages/x402-larkin-py      — Python SDK (larkin-x402 on PyPI)
 tests/x402-demo              — End-to-end SDK consumer example
 ```
+
+## Why Larkin exists
+
+In January 2026, an AI agent called Lobstar Wilde lost $250,000 on a single transaction because no one checked its reputation. The x402 protocol solved machine-to-machine payment but left authorization as an exercise for the reader. Larkin is that exercise, finished.
 
 ## Documentation
 
