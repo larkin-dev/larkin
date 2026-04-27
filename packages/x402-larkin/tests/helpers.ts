@@ -79,6 +79,28 @@ export function fetchMockThrowing(): typeof fetch {
   }) as unknown as typeof fetch;
 }
 
+/** Simulates the 402 free_tier_exhausted response from /v1/check. */
+export function fetchMock402FreeTierExhausted(): typeof fetch {
+  return vi.fn(async () =>
+    new Response(
+      JSON.stringify({
+        ok: false,
+        error: {
+          code: "free_tier_exhausted",
+          message:
+            "Free tier limit reached (10,000 checks/month). Upgrade to Pro at https://larkin.sh/dashboard/billing.",
+          checksRemaining: 0,
+          upgradeUrl: "https://larkin.sh/dashboard/billing",
+        },
+      }),
+      {
+        status: 402,
+        headers: { "content-type": "application/json" },
+      },
+    ),
+  ) as unknown as typeof fetch;
+}
+
 export const PROOF_HEADER = makeProofHeader(VITALIK);
 
 /** Payload that decodes as JSON but matches neither EIP-3009 nor Permit2. */

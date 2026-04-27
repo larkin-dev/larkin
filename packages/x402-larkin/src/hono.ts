@@ -40,18 +40,14 @@ export function preflight(
       });
     }
 
-    if (outcome.kind === "service_unavailable") {
+    if (outcome.kind === "service_unavailable" || outcome.kind === "free_tier_exhausted") {
       if (mode === "block") {
         return new Response(JSON.stringify(SERVICE_UNAVAILABLE_BODY), {
           status: 503,
           headers: { "content-type": "application/json" },
         });
       }
-      return wrapResponseWithHeader(
-        await handler(c),
-        "X-Larkin-Error",
-        "service_unavailable",
-      );
+      return wrapResponseWithHeader(await handler(c), "X-Larkin-Error", outcome.kind);
     }
 
     if (outcome.kind === "deny") {

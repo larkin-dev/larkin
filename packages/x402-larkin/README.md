@@ -55,6 +55,15 @@ app.get("/paid/data", (_req, res) => res.json({ ok: true }));
 | `warn` | Always runs the handler. Adds `X-Larkin-Score`, `X-Larkin-Decision`, `X-Larkin-CheckId` response headers. |
 | `surcharge` | Signals the x402 layer to multiply price (`X-Larkin-Surcharge-Multiplier` header) instead of denying. |
 
+## Error states
+
+When the Larkin API returns an error rather than a decision, the SDK surfaces it as one of two outcomes (visible via the `X-Larkin-Error` response header in warn mode, and via a `console.warn` from the SDK in either mode):
+
+| `X-Larkin-Error` | Meaning |
+|---|---|
+| `service_unavailable` | Larkin's API is unreachable (timeout, network error, 5xx). Block mode returns `503`; warn mode runs the handler and adds the header. |
+| `free_tier_exhausted` | Your Larkin account has used its monthly Free-tier quota (10,000 checks). The SDK logs a `console.warn` containing the upgrade URL — `https://larkin.sh/dashboard/billing`. Block mode returns `503` (the trust gate is effectively unavailable until you upgrade); warn mode runs the handler with the header. Upgrade to keep block-mode endpoints serving. |
+
 ## Options
 
 | Option | Type | Required | Description |

@@ -6,6 +6,7 @@ import {
   makeCheckOk,
   fetchMockReturning,
   fetchMockThrowing,
+  fetchMock402FreeTierExhausted,
   makeUnknownShapeHeader,
 } from "./helpers.js";
 
@@ -136,5 +137,44 @@ describe("Hono adapter", () => {
     const res = await request(app);
     expect(res.status).toBe(200);
     expect(res.headers.get("X-Larkin-Error")).toBe("service_unavailable");
+  });
+
+  it("returns 503 in block mode when Larkin API responds 402 free_tier_exhausted", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const app = buildApp({
+      apiKey: "k",
+      mode: "block",
+      minScore: 40,
+      fetchImpl: fetchMock402FreeTierExhausted(),
+    });
+    const res = await request(app);
+    expect(res.status).toBe(503);
+    // The end-user-facing body stays the generic "service unavailable" — the
+    // agent paying via x402 isn't the audience for the developer's billing
+    // state. The developer-facing signal lives in the console.warn below.
+    expect(((await res.json()) as { error: string }).error).toBe(
+      "trust_service_unavailable",
+    );
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/Free tier limit reached/);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(
+      /https:\/\/larkin\.sh\/dashboard\/billing/,
+    );
+    warnSpy.mockRestore();
+  });
+
+  it("fails open in warn mode on 402 with X-Larkin-Error: free_tier_exhausted header", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const app = buildApp({
+      apiKey: "k",
+      mode: "warn",
+      minScore: 40,
+      fetchImpl: fetchMock402FreeTierExhausted(),
+    });
+    const res = await request(app);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("X-Larkin-Error")).toBe("free_tier_exhausted");
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
   });
 });

@@ -49,11 +49,11 @@ export function preflight<Ctx = unknown>(
       return json(MISSING_PROOF_BODY, { status: 400 });
     }
 
-    if (outcome.kind === "service_unavailable") {
+    if (outcome.kind === "service_unavailable" || outcome.kind === "free_tier_exhausted") {
       if (mode === "block") {
         return json(SERVICE_UNAVAILABLE_BODY, { status: 503 });
       }
-      return withErrorHeader(await handler(req, ctx), "service_unavailable");
+      return withErrorHeader(await handler(req, ctx), outcome.kind);
     }
 
     if (outcome.kind === "deny") {

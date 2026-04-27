@@ -35,12 +35,12 @@ export function preflight(
         return;
       }
 
-      if (outcome.kind === "service_unavailable") {
+      if (outcome.kind === "service_unavailable" || outcome.kind === "free_tier_exhausted") {
         if (mode === "block") {
           res.status(503).json(SERVICE_UNAVAILABLE_BODY);
           return;
         }
-        res.setHeader("X-Larkin-Error", "service_unavailable");
+        res.setHeader("X-Larkin-Error", outcome.kind);
         return handler(req, res, next);
       }
 
