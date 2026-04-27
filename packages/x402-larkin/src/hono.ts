@@ -40,6 +40,10 @@ export function preflight(
       });
     }
 
+    // Collapse service_unavailable and free_tier_exhausted into the same wire response.
+    // End agents (the entities making paid API calls) get the same opaque 503 — billing
+    // state is the developer's concern, not the agent's. Developers see distinct outcomes
+    // via console.warn (with upgradeUrl) and X-Larkin-Error response header in warn mode.
     if (outcome.kind === "service_unavailable" || outcome.kind === "free_tier_exhausted") {
       if (mode === "block") {
         return new Response(JSON.stringify(SERVICE_UNAVAILABLE_BODY), {
