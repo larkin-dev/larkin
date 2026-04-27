@@ -28,7 +28,14 @@ export interface CheckResponse {
     surchargeMultiplier?: number;
     receipt?: unknown;
   };
-  error?: { code: string; message: string };
+  error?: {
+    code: string;
+    message: string;
+    /** Present on `code === "free_tier_exhausted"` 402 responses. */
+    upgradeUrl?: string;
+    /** Present on `code === "free_tier_exhausted"` 402 responses. */
+    checksRemaining?: number;
+  };
   meta?: { cached?: boolean; partial?: boolean };
 }
 
@@ -37,10 +44,17 @@ export interface CheckResponse {
  * `kind` is the adapter's action (pass through / reject). `decision` is the
  * server's raw verdict — they can diverge in warn mode, where a `decision: "deny"`
  * still lands in `kind: "allow"` because warn mode always runs the handler.
+ *
+ * `free_tier_exhausted` is distinct from `service_unavailable` so monitoring
+ * and dashboards can distinguish "Larkin is down" from "your Larkin account
+ * needs to upgrade." Adapters surface both as 503 to end users in block
+ * mode (the trust gate is effectively unavailable in both cases) but with
+ * different `X-Larkin-Error` header values.
  */
 export type PreflightOutcome =
   | { kind: "missing_proof" }
   | { kind: "service_unavailable" }
+  | { kind: "free_tier_exhausted"; upgradeUrl: string; message: string }
   | {
       kind: "allow";
       score: number;
@@ -136,6 +150,17 @@ async function callCheck(
       }),
       signal: controller.signal,
     });
+    // 402 carries a structured `free_tier_exhausted` body with `upgradeUrl`
+    // and `message` — propagate it instead of collapsing to null. The
+    // orchestrator distinguishes 402 from generic non-2xx via the body's
+    // `error.code`.
+    if (res.status === 402) {
+      try {
+        return (await res.json()) as CheckResponse;
+      } catch {
+        return null;
+      }
+    }
     if (!res.ok) return null;
     return (await res.json()) as CheckResponse;
   } catch {
@@ -156,6 +181,22 @@ export async function evaluate(
   if (!wallet) return { kind: "missing_proof" };
 
   const response = await callCheck(wallet, opts);
+
+  // Quota exhaustion: developer's Larkin account is over its monthly cap.
+  // Surface as a distinct outcome (and a console.warn with the upgrade URL)
+  // so the developer sees an actionable signal in their logs — not just a
+  // generic "service unavailable" that looks indistinguishable from a
+  // network blip.
+  if (response && !response.ok && response.error?.code === "free_tier_exhausted") {
+    const upgradeUrl =
+      response.error.upgradeUrl ?? "https://larkin.sh/dashboard/billing";
+    const message =
+      response.error.message ??
+      "Larkin free tier limit reached. Upgrade required.";
+    console.warn(`[larkin] ${message} (${upgradeUrl})`);
+    return { kind: "free_tier_exhausted", upgradeUrl, message };
+  }
+
   if (!response || !response.ok || !response.data) {
     return { kind: "service_unavailable" };
   }
