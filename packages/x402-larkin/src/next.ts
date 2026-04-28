@@ -49,11 +49,16 @@ export function preflight<Ctx = unknown>(
       return json(MISSING_PROOF_BODY, { status: 400 });
     }
 
-    // Collapse service_unavailable and free_tier_exhausted into the same wire response.
-    // End agents (the entities making paid API calls) get the same opaque 503 — billing
-    // state is the developer's concern, not the agent's. Developers see distinct outcomes
-    // via console.warn (with upgradeUrl) and X-Larkin-Error response header in warn mode.
-    if (outcome.kind === "service_unavailable" || outcome.kind === "free_tier_exhausted") {
+    // Collapse service_unavailable, free_tier_exhausted, and tier_hard_cap_exceeded
+    // into the same wire response. End agents (the entities making paid API calls)
+    // get the same opaque 503 — billing state is the developer's concern, not the
+    // agent's. Developers see distinct outcomes via console.warn (with upgradeUrl)
+    // and X-Larkin-Error response header in warn mode.
+    if (
+      outcome.kind === "service_unavailable" ||
+      outcome.kind === "free_tier_exhausted" ||
+      outcome.kind === "tier_hard_cap_exceeded"
+    ) {
       if (mode === "block") {
         return json(SERVICE_UNAVAILABLE_BODY, { status: 503 });
       }

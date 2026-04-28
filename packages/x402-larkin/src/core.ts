@@ -31,10 +31,16 @@ export interface CheckResponse {
   error?: {
     code: string;
     message: string;
-    /** Present on `code === "free_tier_exhausted"` 402 responses. */
+    /** Present on 402 responses (free_tier_exhausted, tier_hard_cap_exceeded). */
     upgradeUrl?: string;
-    /** Present on `code === "free_tier_exhausted"` 402 responses. */
+    /** Legacy field from 1.0.3-era 402 free_tier_exhausted responses. */
     checksRemaining?: number;
+    /** Present on 1.0.4+ 402 responses. */
+    tier?: "free" | "pro" | "scale";
+    /** Present on 1.0.4+ 402 responses. */
+    checksUsed?: number;
+    /** Present on 1.0.4+ 402 responses. */
+    hardCap?: number;
   };
   meta?: { cached?: boolean; partial?: boolean };
 }
@@ -45,16 +51,37 @@ export interface CheckResponse {
  * server's raw verdict — they can diverge in warn mode, where a `decision: "deny"`
  * still lands in `kind: "allow"` because warn mode always runs the handler.
  *
- * `free_tier_exhausted` is distinct from `service_unavailable` so monitoring
- * and dashboards can distinguish "Larkin is down" from "your Larkin account
- * needs to upgrade." Adapters surface both as 503 to end users in block
- * mode (the trust gate is effectively unavailable in both cases) but with
- * different `X-Larkin-Error` header values.
+ * `free_tier_exhausted` and `tier_hard_cap_exceeded` are distinct from
+ * `service_unavailable` so monitoring and dashboards can distinguish
+ * "Larkin is down" from "your Larkin account hit a tier cap." Adapters
+ * surface all three as 503 to end users in block mode (the trust gate is
+ * effectively unavailable) but with different `X-Larkin-Error` header
+ * values.
+ *
+ * Free tier hits `free_tier_exhausted` at the stated 10K/month. Pro and
+ * Scale get a 2x overage headroom band; hitting that 2x ceiling triggers
+ * `tier_hard_cap_exceeded`. Both outcomes carry tier + checksUsed +
+ * hardCap so consumers can render their own UX (e.g., "1.0M / 1.0M used").
  */
 export type PreflightOutcome =
   | { kind: "missing_proof" }
   | { kind: "service_unavailable" }
-  | { kind: "free_tier_exhausted"; upgradeUrl: string; message: string }
+  | {
+      kind: "free_tier_exhausted";
+      tier: "free";
+      upgradeUrl: string;
+      message: string;
+      checksUsed: number;
+      hardCap: number;
+    }
+  | {
+      kind: "tier_hard_cap_exceeded";
+      tier: "pro" | "scale";
+      upgradeUrl: string;
+      message: string;
+      checksUsed: number;
+      hardCap: number;
+    }
   | {
       kind: "allow";
       score: number;
@@ -150,10 +177,11 @@ async function callCheck(
       }),
       signal: controller.signal,
     });
-    // 402 carries a structured `free_tier_exhausted` body with `upgradeUrl`
-    // and `message` — propagate it instead of collapsing to null. The
-    // orchestrator distinguishes 402 from generic non-2xx via the body's
-    // `error.code`.
+    // 402 carries a structured cap-exhaustion body with `upgradeUrl`,
+    // `tier`, `checksUsed`, `hardCap` — propagate it instead of collapsing
+    // to null. The orchestrator distinguishes 402 from generic non-2xx via
+    // the body's `error.code` (`free_tier_exhausted` or
+    // `tier_hard_cap_exceeded`).
     if (res.status === 402) {
       try {
         return (await res.json()) as CheckResponse;
@@ -182,19 +210,53 @@ export async function evaluate(
 
   const response = await callCheck(wallet, opts);
 
-  // Quota exhaustion: developer's Larkin account is over its monthly cap.
-  // Surface as a distinct outcome (and a console.warn with the upgrade URL)
-  // so the developer sees an actionable signal in their logs — not just a
-  // generic "service unavailable" that looks indistinguishable from a
-  // network blip.
+  // Tier-cap exhaustion: developer's Larkin account is at the stated Free
+  // limit OR over the 2x hard cap on Pro/Scale. Surface as distinct outcomes
+  // (and a console.warn with the upgrade URL) so the developer sees an
+  // actionable signal in their logs — not just a generic "service
+  // unavailable" that looks indistinguishable from a network blip. Both
+  // outcomes carry tier + checksUsed + hardCap so consumers can render
+  // their own UX without round-tripping the dashboard.
   if (response && !response.ok && response.error?.code === "free_tier_exhausted") {
+    const err = response.error;
     const upgradeUrl =
-      response.error.upgradeUrl ?? "https://larkin.sh/dashboard/billing";
+      err.upgradeUrl ?? "https://larkin.sh/dashboard/billing";
     const message =
-      response.error.message ??
-      "Larkin free tier limit reached. Upgrade required.";
+      err.message ?? "Larkin free tier limit reached. Upgrade required.";
     console.warn(`[larkin] ${message} (${upgradeUrl})`);
-    return { kind: "free_tier_exhausted", upgradeUrl, message };
+    return {
+      kind: "free_tier_exhausted",
+      tier: "free",
+      upgradeUrl,
+      message,
+      checksUsed: typeof err.checksUsed === "number" ? err.checksUsed : 0,
+      hardCap: typeof err.hardCap === "number" ? err.hardCap : 10_000,
+    };
+  }
+
+  if (response && !response.ok && response.error?.code === "tier_hard_cap_exceeded") {
+    const err = response.error;
+    const upgradeUrl = err.upgradeUrl ?? "mailto:sales@larkin.sh";
+    const message =
+      err.message ?? "Larkin tier hard cap reached. Contact sales for higher volume.";
+    const tier: "pro" | "scale" = err.tier === "scale" ? "scale" : "pro";
+    console.warn(`[larkin] ${message} (${upgradeUrl})`);
+    return {
+      kind: "tier_hard_cap_exceeded",
+      tier,
+      upgradeUrl,
+      message,
+      checksUsed: typeof err.checksUsed === "number" ? err.checksUsed : 0,
+      // Tier-aware fallback. Unreachable in practice (the route always sends
+      // hardCap on tier_hard_cap_exceeded), but ships sane values if the
+      // response shape ever drifts.
+      hardCap:
+        typeof err.hardCap === "number"
+          ? err.hardCap
+          : err.tier === "scale"
+            ? 10_000_000
+            : 1_000_000,
+    };
   }
 
   if (!response || !response.ok || !response.data) {
