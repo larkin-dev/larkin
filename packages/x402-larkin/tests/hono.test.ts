@@ -7,6 +7,7 @@ import {
   fetchMockReturning,
   fetchMockThrowing,
   fetchMock402FreeTierExhausted,
+  fetchMock402TierHardCapExceeded,
   makeUnknownShapeHeader,
 } from "./helpers.js";
 
@@ -174,6 +175,40 @@ describe("Hono adapter", () => {
     const res = await request(app);
     expect(res.status).toBe(200);
     expect(res.headers.get("X-Larkin-Error")).toBe("free_tier_exhausted");
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    warnSpy.mockRestore();
+  });
+
+  it("returns 503 in block mode when Larkin API responds 402 tier_hard_cap_exceeded (Pro)", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const app = buildApp({
+      apiKey: "k",
+      mode: "block",
+      minScore: 40,
+      fetchImpl: fetchMock402TierHardCapExceeded("pro"),
+    });
+    const res = await request(app);
+    expect(res.status).toBe(503);
+    expect(((await res.json()) as { error: string }).error).toBe(
+      "trust_service_unavailable",
+    );
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/2x stated limit/);
+    expect(warnSpy.mock.calls[0]?.[0]).toMatch(/mailto:sales@larkin\.sh/);
+    warnSpy.mockRestore();
+  });
+
+  it("fails open in warn mode on 402 with X-Larkin-Error: tier_hard_cap_exceeded header (Scale)", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const app = buildApp({
+      apiKey: "k",
+      mode: "warn",
+      minScore: 40,
+      fetchImpl: fetchMock402TierHardCapExceeded("scale"),
+    });
+    const res = await request(app);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("X-Larkin-Error")).toBe("tier_hard_cap_exceeded");
     expect(warnSpy).toHaveBeenCalledTimes(1);
     warnSpy.mockRestore();
   });

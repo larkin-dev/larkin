@@ -79,7 +79,7 @@ export function fetchMockThrowing(): typeof fetch {
   }) as unknown as typeof fetch;
 }
 
-/** Simulates the 402 free_tier_exhausted response from /v1/check. */
+/** Simulates the 402 free_tier_exhausted response from /v1/check (1.0.4 shape). */
 export function fetchMock402FreeTierExhausted(): typeof fetch {
   return vi.fn(async () =>
     new Response(
@@ -89,8 +89,36 @@ export function fetchMock402FreeTierExhausted(): typeof fetch {
           code: "free_tier_exhausted",
           message:
             "Free tier limit reached (10,000 checks/month). Upgrade to Pro at https://larkin.sh/dashboard/billing.",
-          checksRemaining: 0,
+          tier: "free",
+          checksUsed: 10_000,
+          hardCap: 10_000,
           upgradeUrl: "https://larkin.sh/dashboard/billing",
+        },
+      }),
+      {
+        status: 402,
+        headers: { "content-type": "application/json" },
+      },
+    ),
+  ) as unknown as typeof fetch;
+}
+
+/** Simulates the 402 tier_hard_cap_exceeded response from /v1/check. */
+export function fetchMock402TierHardCapExceeded(
+  tier: "pro" | "scale" = "pro",
+): typeof fetch {
+  const hardCap = tier === "pro" ? 1_000_000 : 10_000_000;
+  return vi.fn(async () =>
+    new Response(
+      JSON.stringify({
+        ok: false,
+        error: {
+          code: "tier_hard_cap_exceeded",
+          message: `${tier} tier hard cap reached (${hardCap.toLocaleString()} checks/month, 2x stated limit). Contact sales@larkin.sh for higher volume.`,
+          tier,
+          checksUsed: hardCap,
+          hardCap,
+          upgradeUrl: "mailto:sales@larkin.sh",
         },
       }),
       {

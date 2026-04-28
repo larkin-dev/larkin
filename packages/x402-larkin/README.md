@@ -57,12 +57,13 @@ app.get("/paid/data", (_req, res) => res.json({ ok: true }));
 
 ## Error states
 
-When the Larkin API returns an error rather than a decision, the SDK surfaces it as one of two outcomes (visible via the `X-Larkin-Error` response header in warn mode, and via a `console.warn` from the SDK in either mode):
+When the Larkin API returns an error rather than a decision, the SDK surfaces it as one of three outcomes (visible via the `X-Larkin-Error` response header in warn mode, and via a `console.warn` from the SDK in either mode):
 
 | `X-Larkin-Error` | Meaning |
 |---|---|
 | `service_unavailable` | Larkin's API is unreachable (timeout, network error, 5xx). Block mode returns `503`; warn mode runs the handler and adds the header. |
 | `free_tier_exhausted` | Your Larkin account has used its monthly Free-tier quota (10,000 checks). The SDK logs a `console.warn` containing the upgrade URL — `https://larkin.sh/dashboard/billing`. Block mode returns `503` (the trust gate is effectively unavailable until you upgrade); warn mode runs the handler with the header. Upgrade to keep block-mode endpoints serving. |
+| `tier_hard_cap_exceeded` | Your Pro or Scale account has hit its 2x hard cap (Pro: 1M/month, Scale: 10M/month). Pro and Scale tiers include 2x overage headroom over their stated limit before this fires. The SDK logs a `console.warn` with `mailto:sales@larkin.sh`. Block mode returns `503`; warn mode runs the handler with the header. Email sales to right-size your plan. |
 
 ## Options
 
