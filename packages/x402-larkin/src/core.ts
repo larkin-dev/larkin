@@ -247,7 +247,15 @@ export async function evaluate(
       upgradeUrl,
       message,
       checksUsed: typeof err.checksUsed === "number" ? err.checksUsed : 0,
-      hardCap: typeof err.hardCap === "number" ? err.hardCap : 0,
+      // Tier-aware fallback. Unreachable in practice (the route always sends
+      // hardCap on tier_hard_cap_exceeded), but ships sane values if the
+      // response shape ever drifts.
+      hardCap:
+        typeof err.hardCap === "number"
+          ? err.hardCap
+          : err.tier === "scale"
+            ? 10_000_000
+            : 1_000_000,
     };
   }
 
