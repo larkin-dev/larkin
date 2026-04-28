@@ -1,6 +1,6 @@
 {
   "name": "@larkinsh/verify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Verify Larkin Ed25519-signed receipts. Zero dependency on Larkin's API.",
   "license": "MIT",
   "type": "module",

@@ -87,9 +87,13 @@ export function verify(receipt: Receipt, publicKeyB64Url: string): VerifyResult 
     return { valid: false, reason: "malformed receipt" };
   }
 
+  // Fail closed on missing or non-number expiresAt. Production-issued
+  // receipts always carry a numeric expiresAt; a missing or malformed one
+  // means we have no expiry to honor — refuse to verify rather than treat
+  // as "valid forever."
   const now = Math.floor(Date.now() / 1000);
   if (
-    typeof receipt.payload.expiresAt === "number" &&
+    typeof receipt.payload.expiresAt !== "number" ||
     receipt.payload.expiresAt < now
   ) {
     return { valid: false, reason: "expired" };
