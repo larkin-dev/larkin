@@ -98,6 +98,30 @@ describe("verify() — pure", () => {
     const res = verify(receipt, pubA);
     expect(res).toEqual({ valid: false, reason: "expired" });
   });
+
+  it("rejects a receipt missing expiresAt with reason='expired' (fail closed)", async () => {
+    const payload = makePayload();
+    delete (payload as Partial<ReceiptPayload>).expiresAt;
+    const receipt = await signReceipt(payload, privA);
+    const res = verify(receipt, pubA);
+    expect(res).toEqual({ valid: false, reason: "expired" });
+  });
+
+  it("rejects a receipt with non-number expiresAt with reason='expired' (fail closed)", async () => {
+    const payload = makePayload();
+    (payload as { expiresAt: unknown }).expiresAt = "2026-04-28T18:00:00Z";
+    const receipt = await signReceipt(payload, privA);
+    const res = verify(receipt, pubA);
+    expect(res).toEqual({ valid: false, reason: "expired" });
+  });
+
+  it("rejects a receipt with null expiresAt with reason='expired' (fail closed)", async () => {
+    const payload = makePayload();
+    (payload as { expiresAt: unknown }).expiresAt = null;
+    const receipt = await signReceipt(payload, privA);
+    const res = verify(receipt, pubA);
+    expect(res).toEqual({ valid: false, reason: "expired" });
+  });
 });
 
 describe("verifyWithFetch() — JWKS lookup", () => {
